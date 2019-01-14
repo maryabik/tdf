@@ -1,21 +1,99 @@
-<!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
   <h1>
     Welcome to {{ title }}!
   </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+ </div>
+ <div class="container-fluid">
+   <h2>Bootcamp Entrollment Form</h2>
+   <form #userForm='ngForm' >
 
+{{ userForm.form.valid }}
+
+   <hr/>
+
+   {{ userModel | json }} 
+
+      <div class="form-group">
+          <label >Name</label>
+          <input type="text" #user="ngModel" class="form-control" 
+          [class.is-invalid]="user.invalid && user.touched" [(ngModel)]="userModel.username"
+           placeholder="Enter name" name="username" required >
+           <small class="text-danger" [class.d-none]="user.valid || user.untouched">Name is required</small>
+        </div>
+        <hr/>
+
+    <div class="form-group">
+      <label >Email address</label>
+      <input type="email" #email="ngModel" class="form-control" [class.is-invalid]="email.invalid && email.touched"
+       [(ngModel)]="userModel.email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" 
+        placeholder="Enter email" name="email" required>
+      <!-- <small  class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+      <div *ngIf="email.errors && (email.invalid || email.touched)">
+          <small class="text-danger"*ngIf="email.errors.required">Email is required </small>
+          <small class="text-danger"*ngIf="email.errors.pattern">Email Format Please</small>
+      </div>
+    </div>
+ <hr/>
+
+    <div class="form-group">
+        <label >Phone Number</label>
+        <input type="tel" class="form-control"
+         #phone="ngModel" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"  [class.is-invalid]="phone.invalid && phone.touched"
+        [(ngModel)]="userModel.phone" placeholder="Enter phone number" name="phone" required>
+       <!-- <small class="text-danger" [class.d-none]="phone.valid || phone.untouched">Phone Number is required and must be 10 digits</small> -->
+<div *ngIf="phone.errors && (phone.invalid || phone.touched)">
+    <small class="text-danger"*ngIf="phone.errors.required">Phone Number is required </small>
+    <small class="text-danger"*ngIf="phone.errors.pattern">Phone Number must be 11 digits with format 123-456-7890</small>
+</div>      
+      </div>
+      <hr/>
+
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" #password="ngModel" class="form-control"
+       [(ngModel)]="userModel.password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}" [class.is-invalid]="password.invalid && password.touched"
+       placeholder="Password" name="passwod" required>
+       <!-- <small  class="form-text text-muted">Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters.</small> -->
+       <div *ngIf="password.errors && (password.invalid || phone.touched)">
+          <small class="text-danger"*ngIf="password.errors.required">Password is required </small>
+          <small class="text-danger"*ngIf="password.errors.pattern">Must contain at least one number and one uppercase and lowercase letter, and at least 8 or more characters</small>
+      </div>  
+      </div>
+    <hr/>
+    <hr/>
+
+    <div class="form-group">
+        <select class="custom-select custom-select-lg mb-3" (blur)="validateTopic(topic.value)" (change)="validateTopic(topic.value)"
+        #ntopic="ngModel" [class.is-invalid]="ntopic.topicHasError && ntopic.touched"
+        name="ntopic" [(ngModel)]="userModel.ntopic">
+            <option value="default" selected>I am interested in </option>
+            <option *ngFor="let topic of topics">{{ topic }}</option>
+          </select>
+          <small class="text-danger" [class.d-none]=" ntopic.topicHasError  || ntopic.untouched" >Please choose a topic</small>
+      </div>
+ <hr/>
+
+      <div class="mb-3">
+        <label><h4>Time Preference</h4></label>
+    <div class="form-group form-radio">
+      <input type="radio" class="form-check-input" [(ngModel)]="userModel.time" value="morning" name="time">
+      <label class="form-check-label">Morning </label>
+    </div>
+    <div class="form-group form-radio">
+        <input type="radio" class="form-check-input" [(ngModel)]="userModel.time" value="evening" name="time ">
+        <label class="form-check-label" >Evening</label>
+      </div>
+    </div>
+
+    <div class="form-group form-check" mb-3>
+        <input type="checkbox" class="form-check-input" [(ngModel)]="userModel.subscribe" value="evening" name="subscribe ">
+        <label class="form-check-label" >Send me promotional offers</label>
+      </div>
+
+    <button type="submit" class="btn btn-primary">Submit Form</button>
+
+  </form>
+ </div>
+
+                                                                                                                                                                                                                                                                                            
 <router-outlet></router-outlet>
